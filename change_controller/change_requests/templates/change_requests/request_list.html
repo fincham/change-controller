@@ -1,0 +1,34 @@
+{% extends 'change_requests/base.html' %}
+
+{% block title %}List change requests{% endblock %}
+
+{% block content %}
+    {% regroup object_list|dictsort:"status.sort" by status as status_list %}
+
+    <table class="table">
+    {% for status in status_list %}
+                <thead>
+
+            <tr><th style="border: 0" colspan="*"><h1>{{ status.grouper.text }}</h1></th></tr>
+                            <tr>
+                    <th>Name</th><th>System</th><th>Requested by</th><th>Reason</th><th>Implementation date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for request in status.list %}
+                <tr>
+                    <td><a href="{{ request.get_absolute_url }}">{{ request.name }}</a></td>               
+                    <td>{{ request.template }}</td>
+                    <td>{{ request.user }}</td>
+                    <td>{{ request.latest_revision.reason }}</td>
+                    <td>{{ request.latest_revision.implemented }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+    {% endfor %}
+        </table>
+
+{% endblock %}
